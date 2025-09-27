@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "quiz-maker",
+  "version": "0.1.0",
+  "workspaces": [
+    "web",
+    "api"
+  ],
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev"
+  }
+}
