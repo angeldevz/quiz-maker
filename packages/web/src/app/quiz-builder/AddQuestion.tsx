@@ -26,6 +26,7 @@ import { AddMultipleChoice } from "./AddMultipleChoice";
 const quizTypeOptions: Record<QuizType, string> = {
   short: "Short Answer",
   mcq: "Multiple Choice",
+  code: "Code snippet",
 };
 
 interface Props {
@@ -44,6 +45,7 @@ export function AddQuestion({ quiz, finalize }: Props) {
   const [options, setOptions] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [done, setDone] = useState(false);
 
   const mutation = useMutation({
     mutationFn: (data: Question) => createQuestions(quiz.id, data),
@@ -52,6 +54,10 @@ export function AddQuestion({ quiz, finalize }: Props) {
       setTimeout(() => setSuccess(false), 2000);
       reset();
       setOptions([]);
+
+      if (done) {
+        finalize();
+      }
     },
     onError: (error) => {
       setError(error.message);
@@ -76,6 +82,10 @@ export function AddQuestion({ quiz, finalize }: Props) {
     }
     const question = { ...data, options } as Question;
     mutation.mutate(question);
+  }
+
+  function save() {
+    setDone(true);
   }
 
   return (
@@ -146,23 +156,25 @@ export function AddQuestion({ quiz, finalize }: Props) {
                 </Select>
               </FormControl>
               <TextField required label="Question" {...register("prompt")} />
-              {/* <TextField
-              label="Code Snippet"
-              {...register("code")}
-              multiline
-              minRows={5}
-              sx={{
-                textarea: {
-                  resize: "both",
-                },
-              }}
-            /> */}
+
               {type === "mcq" ? (
                 <AddMultipleChoice
                   options={options}
                   setOptions={setOptions}
                   register={register}
                   fieldError={errors.correctAnswer}
+                />
+              ) : type === "code" ? (
+                <TextField
+                  label="Code Snippet"
+                  {...register("code")}
+                  multiline
+                  minRows={5}
+                  sx={{
+                    textarea: {
+                      resize: "both",
+                    },
+                  }}
                 />
               ) : (
                 <TextField
@@ -186,7 +198,7 @@ export function AddQuestion({ quiz, finalize }: Props) {
               <Button variant="outlined" type="submit">
                 Add question
               </Button>
-              <Button variant="contained" type="button" onClick={finalize}>
+              <Button variant="contained" type="submit" onClick={save}>
                 Save
               </Button>
             </Box>

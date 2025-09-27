@@ -25,23 +25,28 @@ interface Props {
   quizId: number;
 }
 
+export interface Answer {
+  value: string;
+  idx?: number;
+}
 interface AnswerForm {
   answer: string;
 }
 
 export function ShowQuestions({ quizId }: Props) {
   const cheatStats = useAntiCheat();
-  const { handleSubmit, register } = useForm<AnswerForm>();
+  const { handleSubmit, register, reset } = useForm<AnswerForm>();
 
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<string[]>([]);
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const [showSummary, setShowSummary] = useState(false);
 
   const resetExam = useCallback(() => {
     setCurrent(0);
     setAnswers([]);
     setShowSummary(false);
-  }, []);
+    reset();
+  }, [reset]);
 
   const { data, isLoading } = useQuery<Quiz>({
     queryKey: ["quiz", quizId],
@@ -65,17 +70,22 @@ export function ShowQuestions({ quizId }: Props) {
     );
   }
 
+  const currentQuestion = data.questions[current];
+
   function previousItem() {
     setCurrent((prev) => prev - 1);
+    reset();
   }
 
   function nextItem() {
     setCurrent((prev) => prev + 1);
+    reset();
   }
 
-  function saveAnswer(answer: string) {
+  function saveAnswer(answer: Answer) {
     const answeredQuestions = [...answers];
     answeredQuestions[current] = answer;
+    console.log(answeredQuestions);
     setAnswers(answeredQuestions);
   }
 
@@ -84,7 +94,10 @@ export function ShowQuestions({ quizId }: Props) {
       return;
     }
 
-    saveAnswer(answer);
+    //we already saved the mcq answer
+    if (currentQuestion.type !== "mcq") {
+      saveAnswer({ value: answer });
+    }
 
     if (current === data.questions.length - 1) {
       setShowSummary(true);
@@ -94,7 +107,13 @@ export function ShowQuestions({ quizId }: Props) {
   }
 
   function onChange(event: ChangeEvent<HTMLInputElement>) {
-    saveAnswer(event.target.value);
+    if (currentQuestion.type === "mcq") {
+      const value = event.target.value;
+      saveAnswer({
+        value,
+        idx: currentQuestion.options.indexOf(value),
+      });
+    }
   }
 
   if (showSummary) {
@@ -108,7 +127,6 @@ export function ShowQuestions({ quizId }: Props) {
     );
   }
 
-  const currentQuestion = data.questions[current];
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box
@@ -126,7 +144,10 @@ export function ShowQuestions({ quizId }: Props) {
             <CardHeader title={currentQuestion.prompt} />
             <CardContent>
               {currentQuestion.type === "mcq" ? (
-                <RadioGroup value={answers[current] || ""} onChange={onChange}>
+                <RadioGroup
+                  value={answers[current]?.value || ""}
+                  onChange={onChange}
+                >
                   {currentQuestion.options.map((option) => (
                     <FormControlLabel
                       key={option}
@@ -134,7 +155,7 @@ export function ShowQuestions({ quizId }: Props) {
                         <Radio
                           required
                           value={option}
-                          {...register("answer")}
+                          {...register("answer", {})}
                         />
                       }
                       label={option}
@@ -148,6 +169,13 @@ export function ShowQuestions({ quizId }: Props) {
                   required
                   defaultValue={answers[current] ?? ""}
                   {...register("answer")}
+                  multiline
+                  minRows={5}
+                  sx={{
+                    textarea: {
+                      resize: "both",
+                    },
+                  }}
                 />
               )}
             </CardContent>

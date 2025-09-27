@@ -67,11 +67,18 @@ export function Summary({ quizId }: Props) {
                     />
                   ))}
                 </RadioGroup>
+              ) : item.type === "code" ? (
+                <TextField
+                  label="Answer"
+                  fullWidth
+                  value={"any code"}
+                  InputProps={{ readOnly: true }}
+                />
               ) : (
                 <TextField
                   label="Answer"
                   fullWidth
-                  defaultValue={item.correctAnswer}
+                  value={item.correctAnswer}
                   InputProps={{ readOnly: true }}
                 />
               )}

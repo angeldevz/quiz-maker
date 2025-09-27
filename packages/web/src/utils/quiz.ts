@@ -1,4 +1,4 @@
-export type QuizType = "mcq" | "short";
+export type QuizType = "mcq" | "short" | "code";
 
 export interface BaseQuestion {
   id: number;
@@ -17,7 +17,11 @@ export interface ShortAnswer extends BaseQuestion {
   type: "short";
 }
 
-export type Question = MultipleChoice | ShortAnswer;
+export interface CodeSnippet extends BaseQuestion {
+  type: "code";
+}
+
+export type Question = MultipleChoice | ShortAnswer | CodeSnippet;
 
 // to fix the react-hook-form register issue
 

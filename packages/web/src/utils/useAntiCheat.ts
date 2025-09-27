@@ -19,13 +19,18 @@ export function useAntiCheat() {
         setSwitchTabsEvents((prev) => prev + 1);
       }
     };
+    const handleBlur = () => {
+      setSwitchTabsEvents((prev) => prev + 1);
+    };
 
     document.addEventListener("paste", handlePaste);
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("blur", handleBlur);
 
     return () => {
       document.removeEventListener("paste", handlePaste);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("blur", handleBlur);
     };
   }, []);
 
