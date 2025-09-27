@@ -1,8 +1,8 @@
 "use client";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-import { PropsWithChildren } from "react";
-import theme from "../utils/theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import theme from "@utils/theme";
+import { PropsWithChildren } from "react";
 
 export function AppThemeProvider({ children }: PropsWithChildren) {
   return (

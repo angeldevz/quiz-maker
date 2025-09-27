@@ -14,8 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { getQuizzes } from "@utils/api";
 import { useForm } from "react-hook-form";
-import { getQuizzes } from "../../api/quiz";
 
 interface Props {
   setQuizId: (_: number) => void;

@@ -8,10 +8,10 @@ import {
   TextField,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
+import { createQuiz } from "@utils/api";
+import { Quiz, QuizForm } from "@utils/quiz";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { createQuiz } from "../../api/quiz";
-import { Quiz, QuizForm } from "../../types/quiz";
 import { AddQuestion } from "./AddQuestion";
 import { Summary } from "./Summary";
 

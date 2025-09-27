@@ -14,9 +14,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { getQuizzById } from "@utils/api";
+import { Quiz } from "@utils/quiz";
 import Link from "next/link";
-import { getQuizzById } from "../../api/quiz";
-import { Quiz } from "../../types/quiz";
 
 interface Props {
   quizId: number;

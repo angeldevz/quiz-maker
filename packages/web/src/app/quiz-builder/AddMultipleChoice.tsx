@@ -9,9 +9,9 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
+import { QuestionForm } from "@utils/quiz";
 import { useRef, useState } from "react";
 import { FieldError, UseFormRegister } from "react-hook-form";
-import { QuestionForm } from "../../types/quiz";
 
 type Props = {
   options: string[];

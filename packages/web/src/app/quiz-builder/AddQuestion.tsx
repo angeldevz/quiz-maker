@@ -17,10 +17,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
+import { createQuestions } from "@utils/api";
+import { Question, QuestionForm, Quiz, QuizType } from "@utils/quiz";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { createQuestions } from "../../api/quiz";
-import { Question, QuestionForm, Quiz, QuizType } from "../../types/quiz";
 import { AddMultipleChoice } from "./AddMultipleChoice";
 
 const quizTypeOptions: Record<QuizType, string> = {

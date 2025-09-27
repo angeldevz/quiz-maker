@@ -14,11 +14,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { getQuizzById } from "@utils/api";
+import { Quiz } from "@utils/quiz";
+import { useAntiCheat } from "@utils/useAntiCheat";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getQuizzById } from "../../api/quiz";
-import { Quiz } from "../../types/quiz";
-import { useAntiCheat } from "../../utils/useAntiCheat";
 import { Summary } from "./Summary";
 
 interface Props {

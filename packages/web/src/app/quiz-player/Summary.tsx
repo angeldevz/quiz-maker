@@ -8,9 +8,9 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { Question } from "@utils/quiz";
+import { CheatStats } from "@utils/useAntiCheat";
 import { Fragment, useEffect, useState } from "react";
-import { Question } from "../../types/quiz";
-import { CheatStats } from "../../utils/useAntiCheat";
 
 interface Summary {
   id: number;

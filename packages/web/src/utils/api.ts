@@ -1,5 +1,5 @@
-import { Question, Quiz, QuizForm } from "../types/quiz";
-import api from "../utils/axios";
+import { Question, Quiz, QuizForm } from "@utils/quiz";
+import api from "./axios";
 
 export async function getQuizzes(): Promise<Quiz[]> {
   return await api.get("/quizzes");
