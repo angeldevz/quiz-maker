@@ -1,10 +1,13 @@
 # Quiz Maker
 
-## How to Setup
+## Quick Start
+```
+# Install all dependencies (web & api)
+pnpm i
 
-- On the root directory
-  - Install all dependencies: `pnpm i`
-  - Run on your local: `pnpm dev`
+# Run local server (web & api)
+pnpm dev
+```
 
 That's it! Ready to Start?
 
@@ -59,5 +62,7 @@ Can be added based on the available API endpoints/data
   - TailwindCSS
   - Material UI (I am familiar with tailwindCSS but I also wanted to explore MaterialUI so I added this on my styling library)
 - Backend Connection:
-  - tanstack query
+  - Tanstack query
   - axios (I know fetch is lighter for this simple app but I use axios for a more simple response handling)
+- Package Manager
+  - pnpm (I've been using pnpm for faster installation and for monorepo support)
