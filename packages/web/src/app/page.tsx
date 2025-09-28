@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <Container maxWidth="md">
       <Grid container spacing={4}>
-        <Grid size={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Grow in>
             <Card>
               <CardHeader title="Quiz Builder" />
@@ -29,7 +29,7 @@ export default function Home() {
             </Card>
           </Grow>
         </Grid>
-        <Grid size={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Grow in>
             <Card>
               <CardHeader title="Quiz Player" />

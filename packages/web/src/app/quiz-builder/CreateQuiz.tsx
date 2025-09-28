@@ -6,20 +6,20 @@ import {
   FormHelperText,
   Slide,
   TextField,
+  Typography,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { createQuiz } from "@utils/api";
 import { Quiz, QuizForm } from "@utils/quiz";
+import { normalize } from "@utils/text";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { AddQuestion } from "./AddQuestion";
-import { Summary } from "./Summary";
+import { CreateQuestions } from "./CreateQuestions";
 
 export function CreateQuiz() {
   const { handleSubmit, register } = useForm<QuizForm>();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showSummary, setShowSummary] = useState(false);
 
   const mutation = useMutation({
     mutationFn: createQuiz,
@@ -32,15 +32,16 @@ export function CreateQuiz() {
   });
 
   function onSubmit(data: QuizForm) {
-    mutation.mutate(data);
-  }
+    const normalizedData = {
+      title: normalize(data.title),
+      description: normalize(data.description),
+    };
 
-  function finalize() {
-    setShowSummary(true);
-  }
-
-  if (showSummary && quiz) {
-    return <Summary quizId={quiz.id} />;
+    if (!normalizedData.title || !normalizedData.description) {
+      setError("Title and description are required to create a quiz.");
+      return;
+    }
+    mutation.mutate(normalizedData);
   }
 
   return (
@@ -86,7 +87,21 @@ export function CreateQuiz() {
           <FormHelperText error={!!error}>{error}</FormHelperText>
         </form>
       </Slide>
-      {quiz?.id && <AddQuestion quiz={quiz} finalize={finalize} />}
+      {quiz?.id && (
+        <Box
+          sx={{
+            display: "flex",
+            flexFlow: "column",
+            gap: 2,
+          }}
+        >
+          <Typography variant="h4">
+            #{quiz.id}: {quiz.title}
+          </Typography>
+          <Typography variant="subtitle2">{quiz.description}</Typography>
+          <CreateQuestions quiz={quiz} />
+        </Box>
+      )}
     </Box>
   );
 }

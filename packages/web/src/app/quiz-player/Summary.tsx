@@ -1,7 +1,6 @@
 "use client";
 import {
   Box,
-  Button,
   Divider,
   List,
   ListItem,
@@ -13,6 +12,7 @@ import { normalize } from "@utils/text";
 import { CheatStats } from "@utils/useAntiCheat";
 import { Fragment, useEffect, useState } from "react";
 import { Answer } from "./ShowQuestions";
+import { Stats } from "./Stats";
 
 interface Summary {
   id: number;
@@ -25,11 +25,10 @@ interface Summary {
 interface Props {
   questions: Question[];
   answers: Answer[];
-  retake: () => void;
   cheatStats: CheatStats;
 }
 
-export function Summary({ questions, answers, retake, cheatStats }: Props) {
+export function Summary({ questions, answers, cheatStats }: Props) {
   const [summary, setSummary] = useState<Summary[]>([]);
   const [overallScore, setOverallScore] = useState(0);
 
@@ -61,7 +60,7 @@ export function Summary({ questions, answers, retake, cheatStats }: Props) {
         id: question.id,
         prompt: question.prompt,
         correctAnswer,
-        yourAnswer,
+        yourAnswer: answers[index].value,
         isCorrect,
       });
     });
@@ -77,19 +76,20 @@ export function Summary({ questions, answers, retake, cheatStats }: Props) {
         gap: 4,
       }}
     >
-      <List>
-        <ListItemText>
+      <Box
+        sx={{
+          display: "flex",
+          flexFlow: "row",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
+        <Typography variant="subtitle1">
           Overall Score: <strong>{overallScore}</strong>
-        </ListItemText>
-        <ListItemText>
-          Anti-cheat summary:{" "}
-          <strong>
-            {cheatStats.switchTabsEvents} tab switch(es),{" "}
-            {cheatStats.pasteEvents} paste(s)
-          </strong>
-        </ListItemText>
-      </List>
-
+        </Typography>
+        <Stats type="Tab Switches" events={cheatStats.switchTabsEvents} />
+        <Stats type="Paste Events" events={cheatStats.pasteEvents} />
+      </Box>
       <Divider />
       <Box
         sx={{
@@ -113,7 +113,7 @@ export function Summary({ questions, answers, retake, cheatStats }: Props) {
                     ) : (
                       <>
                         <span className="text-red-400">
-                          Your Answer: {item.yourAnswer}
+                          Your Answer: {item.yourAnswer} (INCORRECT)
                         </span>
                         <span className="text-green-400">
                           Correct Answer: {item.correctAnswer}
@@ -127,7 +127,6 @@ export function Summary({ questions, answers, retake, cheatStats }: Props) {
             </Fragment>
           ))}
         </List>
-        <Button onClick={retake}>Retake exam</Button>
       </Box>
     </Box>
   );

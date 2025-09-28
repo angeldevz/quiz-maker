@@ -42,14 +42,10 @@ export function Summary({ quizId }: Props) {
       sx={{
         display: "flex",
         flexFlow: "column",
-        gap: 4,
+        gap: 2,
       }}
     >
-      <Typography variant="h3">
-        Quiz #{quizId}:{data.title}
-      </Typography>
-      <Typography variant="subtitle1">{data.description}</Typography>
-
+      <Typography variant="h4">Questions:</Typography>
       {data.questions.map((item) => (
         <Slide key={item.id} in direction="left">
           <Card>
@@ -71,7 +67,7 @@ export function Summary({ quizId }: Props) {
                 <TextField
                   label="Answer"
                   fullWidth
-                  value={"any code"}
+                  value={"// any code"}
                   InputProps={{ readOnly: true }}
                 />
               ) : (

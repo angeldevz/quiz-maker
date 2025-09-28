@@ -1,21 +1,51 @@
 import { Question, Quiz, QuizForm } from "@utils/quiz";
+import { AxiosError } from "axios";
 import api from "./axios";
 
+interface MyErrorData {
+  error: string;
+}
+
 export async function getQuizzes(): Promise<Quiz[]> {
-  return await api.get("/quizzes");
+  try {
+    return await api.get("/quizzes");
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      const err = error as AxiosError<MyErrorData>;
+      throw new Error(err.response?.data.error);
+    }
+
+    throw new Error("An unexpected error occurred");
+  }
 }
 
 export async function getQuizzById(id: number): Promise<Quiz> {
-  return await api.get(`/quizzes/${id}`);
+  try {
+    return await api.get(`/quizzes/${id}`);
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      const err = error as AxiosError<MyErrorData>;
+      throw new Error(err.response?.data.error);
+    }
+
+    throw new Error("An unexpected error occurred");
+  }
 }
 
 export async function createQuiz({ title, description }: QuizForm) {
-  return await api.post("/quizzes", {
-    title,
-    description,
-    timeLimitSeconds: 300,
-    isPublished: true,
-  });
+  try {
+    return await api.post("/quizzes", {
+      title,
+      description,
+    });
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      const err = error as AxiosError<MyErrorData>;
+      throw new Error(err.response?.data.error);
+    }
+
+    throw new Error("An unexpected error occurred");
+  }
 }
 
 export async function createQuestions(id: number, question: Question) {

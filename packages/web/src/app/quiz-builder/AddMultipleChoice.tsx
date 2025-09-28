@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import { QuestionForm } from "@utils/quiz";
-import { useRef, useState } from "react";
+import { KeyboardEvent, useRef, useState } from "react";
 import { FieldError, UseFormRegister } from "react-hook-form";
 
 type Props = {
@@ -47,6 +47,17 @@ export function AddMultipleChoice({
     }
     setOptions([...options, value]);
     inputRef.current.value = "";
+    inputRef.current.focus();
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (!inputRef.current) {
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      add();
+    }
   }
 
   return (
@@ -68,7 +79,11 @@ export function AddMultipleChoice({
           ))}
         </RadioGroup>
       </FormControl>
-      <TextField label={`Option ${options.length + 1}`} inputRef={inputRef} />
+      <TextField
+        label={`Option ${options.length + 1}`}
+        inputRef={inputRef}
+        onKeyDown={handleKeyDown}
+      />
       {error && <FormHelperText error={true}>{error}</FormHelperText>}
       <Button
         type="button"

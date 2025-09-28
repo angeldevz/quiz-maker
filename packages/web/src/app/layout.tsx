@@ -32,7 +32,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <AppProvider>
-          <header className="p-4 flex flex-col gap-2 items-center my-8">
+          <header className="flex flex-col gap-2 items-center p-4">
             <Link href="/">
               <Typography variant="h1">Quiz Maker</Typography>
             </Link>

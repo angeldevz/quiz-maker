@@ -15,29 +15,42 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getQuizzes } from "@utils/api";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface Props {
   setQuizId: (_: number) => void;
+  setError: (_: Error | null) => void;
 }
 
 interface FormProps {
   quizId: number;
 }
-export function QuizList({ setQuizId }: Props) {
+export function QuizList({ setQuizId, setError }: Props) {
   const { handleSubmit, register } = useForm<FormProps>();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["quizzes"],
     queryFn: getQuizzes,
   });
 
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
+    if (error) {
+      setError(error);
+    }
+  }, [isLoading, error, setError]);
+
   function onSubmit(data: FormProps) {
+    setError(null);
     setQuizId(data.quizId);
   }
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return (
-      <Box>
+      <Box sx={{ display: "flex", flexFlow: "column", gap: 4 }}>
         <CircularProgress />
         Loading quizzes...
       </Box>
@@ -45,7 +58,7 @@ export function QuizList({ setQuizId }: Props) {
   }
 
   return (
-    <Box sx={{ display: "flex", flexFlow: "column", gap: 4 }}>
+    <Box sx={{ display: "flex", flexFlow: "column", gap: 2 }}>
       <Typography variant="subtitle1">
         Select a quiz to take or enter the quiz id
       </Typography>
@@ -63,7 +76,7 @@ export function QuizList({ setQuizId }: Props) {
           gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
         }}
       >
-        {data.map((item) => (
+        {data?.map((item) => (
           <ListItem key={item.id}>
             <Grow in={true} timeout={200}>
               <Card
@@ -79,7 +92,33 @@ export function QuizList({ setQuizId }: Props) {
                   boxShadow: "primary.main",
                 }}
               >
-                <CardHeader title={item.title} subheader={item.description} />
+                <CardHeader
+                  title={item.title}
+                  subheader={item.description}
+                  slotProps={{
+                    content: {
+                      sx: {
+                        width: "100%",
+                      },
+                    },
+                    title: {
+                      sx: {
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        width: "100%",
+                      },
+                    },
+                    subheader: {
+                      sx: {
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        width: "100%",
+                      },
+                    },
+                  }}
+                />
                 <CardActions sx={{ alignSelf: "center" }}>
                   <Button
                     variant="contained"
