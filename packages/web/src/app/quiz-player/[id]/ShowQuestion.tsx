@@ -39,11 +39,12 @@ export function ShowQuestion({ attemptId, question, submitQuestion }: Props) {
   });
 
   function onSubmit(data: AnswerForm) {
-    if (!normalize(data.value)) {
+    const answer = normalize(data.value);
+    if (!answer) {
       setError(new Error("Answer is required"));
       return;
     }
-    mutate({ questionId: question.id, value: data.value });
+    mutate({ questionId: question.id, value: answer });
   }
 
   if (isPending) {

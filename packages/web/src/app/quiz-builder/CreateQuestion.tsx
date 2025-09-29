@@ -64,7 +64,7 @@ export function CreateQuestion({ quiz, showSuccess }: Props) {
       setError("Please create at least 2 options");
       return;
     }
-    const question = { ...data, options } as Question;
+    const question = { ...normalizedData, options } as Question;
     mutation.mutate(question);
   }
 
