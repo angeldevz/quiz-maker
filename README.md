@@ -1,6 +1,7 @@
 # Quiz Maker
 
 ## Quick Start
+
 ```
 # Install all dependencies (web & api)
 pnpm i
@@ -22,15 +23,17 @@ That's it! Ready to Start?
 
 ## Quiz Player
 
-- Added a listing of Quizzes (for testing purposes)
 - Player can search a quiz by ID
+- Added a listing of Quizzes (for testing purposes)
 - Player can see the overall score and summary at the end of the quiz
-- NOTE: This was not submitted to API as it was not stated on the requirements
+- Save Player exam attempt via `/attempts` endpoint
+  - NOTE: Initially, this was not submitted to API as it was not clear on the requirements if this needs to be saved to the API,
 
 ## Anti Cheat
 
 - Logs the # of times switch tabs and paste events and their timestamp when the user started the quiz
-- NOTE: This was not submitted to API as it was not stated on the requirements
+- Send Record in `/attemps/{recordId}/events`
+  - NOTE: Initially, this was not submitted to API as it was not clear on the requirements if this needs to be saved to the API
 
 # For Improvement
 
@@ -40,17 +43,8 @@ Can be added based on the available API endpoints/data
 
 - Update Quiz title and description
 - Add quiz timer (with: `Quiz.timeLimitSeconds`)
-- Add publish/unpublish quiz (with: `Quiz.isPublished`)
 - Sort questions (with: `Question.position`)
 - Delete Question
-
-## Quiz Player
-
-- Save Player exam attempt via `/attempts` endpoint
-
-## Anti Cheat
-
-- Send Record in `/attemps/{recordId}/events`
 
 ---
 

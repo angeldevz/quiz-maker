@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CircularProgress,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -13,28 +12,41 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { getQuizzById } from "@utils/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getQuizzById, publishQuiz } from "@utils/api";
 import { Quiz } from "@utils/quiz";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
+import { LoadingState } from "../../components/LoadingState";
 
 interface Props {
   quizId: number;
 }
 
 export function Summary({ quizId }: Props) {
+  const hasPublished = useRef(false);
+  const { mutate } = useMutation({
+    mutationFn: ({ quizId }: { quizId: number }) => publishQuiz(quizId),
+    onSuccess: () => {},
+    onError: () => {},
+  });
   const { data, isLoading } = useQuery<Quiz>({
     queryKey: ["quiz", quizId],
     queryFn: () => getQuizzById(quizId),
   });
 
+  useEffect(() => {
+    if (!quizId || hasPublished.current) {
+      return;
+    }
+
+    hasPublished.current = true;
+    mutate({ quizId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizId, hasPublished]);
+
   if (isLoading || !data) {
-    return (
-      <Box>
-        <CircularProgress />
-        Loading the questions...
-      </Box>
-    );
+    return <LoadingState>Loading the questions...</LoadingState>;
   }
 
   return (
@@ -63,13 +75,6 @@ export function Summary({ quizId }: Props) {
                     />
                   ))}
                 </RadioGroup>
-              ) : item.type === "code" ? (
-                <TextField
-                  label="Answer"
-                  fullWidth
-                  value={"// any code"}
-                  InputProps={{ readOnly: true }}
-                />
               ) : (
                 <TextField
                   label="Answer"

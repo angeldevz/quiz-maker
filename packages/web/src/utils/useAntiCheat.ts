@@ -1,4 +1,7 @@
+"use client";
+import { useMutation } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { logEvent } from "./api";
 
 interface TimestampData {
   timestamp: Date;
@@ -11,14 +14,33 @@ export function useAntiCheat() {
   const docRef = useRef<Document>(document);
   const [switchTabsEvents, setSwitchTabsEvents] = useState<TimestampData[]>([]);
   const [pasteEvents, setPasteEvent] = useState<TimestampData[]>([]);
+  const [attemptId, setAttemptId] = useState<number>();
+  const [tracking, setTracking] = useState(false);
+
+  const { mutate } = useMutation({
+    mutationFn: ({ attemptId, event }: { attemptId: number; event: string }) =>
+      logEvent(attemptId, event),
+  });
 
   const handlePaste = useCallback(() => {
-    setPasteEvent((prev) => [...prev, { timestamp: new Date() }]);
-  }, []);
+    if (tracking) {
+      setPasteEvent((prev) => [...prev, { timestamp: new Date() }]);
+      if (attemptId) {
+        mutate({ attemptId, event: "paste event" });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tracking, attemptId]);
 
   const handleSwitchTabs = useCallback(() => {
-    setSwitchTabsEvents((prev) => [...prev, { timestamp: new Date() }]);
-  }, []);
+    if (tracking) {
+      setSwitchTabsEvents((prev) => [...prev, { timestamp: new Date() }]);
+      if (attemptId) {
+        mutate({ attemptId, event: "switch event" });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tracking, attemptId]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -38,14 +60,19 @@ export function useAntiCheat() {
     };
   }, [handlePaste, handleSwitchTabs]);
 
-  function resetStats() {
-    setPasteEvent([]);
-    setSwitchTabsEvents([]);
+  function startTracking(attemptId: number) {
+    setAttemptId(attemptId);
+    setTracking(true);
+  }
+
+  function stopTracking() {
+    setTracking(false);
   }
 
   return {
     switchTabsEvents,
     pasteEvents,
-    resetStats,
+    startTracking,
+    stopTracking,
   };
 }
