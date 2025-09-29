@@ -23,13 +23,16 @@ export interface CodeSnippet extends BaseQuestion {
 
 export type Question = MultipleChoice | ShortAnswer | CodeSnippet;
 
-// to fix the react-hook-form register issue
-
 export interface Quiz {
   id: number;
   title: string;
   description: string;
   questions: Question[];
+}
+
+export interface Attempt {
+  id: number;
+  quiz: Quiz;
 }
 
 export interface QuizForm {
@@ -41,6 +44,12 @@ export type QuestionForm = {
   type: QuizType;
   prompt: string;
   correctAnswer: string;
-  code?: string;
   options?: string[];
 };
+
+export type AnswerForm = {
+  questionId: number;
+  value: string;
+};
+
+export type AnswerAttempt = Question & AnswerForm;

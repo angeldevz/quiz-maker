@@ -117,10 +117,11 @@ export function CreateQuestion({ quiz, showSuccess }: Props) {
               register={register}
               fieldError={errors.correctAnswer}
             />
-          ) : type === "code" ? (
+          ) : (
             <TextField
-              label="Code Snippet"
-              {...register("code")}
+              required
+              label="Answer"
+              {...register("correctAnswer")}
               multiline
               minRows={5}
               sx={{
@@ -129,8 +130,6 @@ export function CreateQuestion({ quiz, showSuccess }: Props) {
                 },
               }}
             />
-          ) : (
-            <TextField required label="Answer" {...register("correctAnswer")} />
           )}
           {error && <FormHelperText>{error}</FormHelperText>}
         </Card>

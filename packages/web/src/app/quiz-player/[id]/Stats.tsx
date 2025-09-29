@@ -44,7 +44,9 @@ export function Stats({ type, events }: Props) {
                 ml: 3,
               }}
             >
-              {item.timestamp.toLocaleTimeString()}
+              <span className="text-sm">
+                {item.timestamp.toLocaleTimeString()}
+              </span>
             </ListItemText>
           ))}
         </List>
